@@ -53,34 +53,30 @@ jobs:
 
       - name: Setup SSM KSP on windows latest 
         run: | 
-          echo curl -X GET  https://one.digicert.com/signingmanager/api-ui/v1/releases/smtools-windows-x64.msi/download -H "x-api-key:%SM_API_KEY%" -o smtools-windows-x64.msi 
-          #msiexec /i smtools-windows-x64.msi /quiet /qn 
-          #smksp_registrar.exe list 
-          #smctl.exe keypair ls 
-          #C:\Windows\System32\certutil.exe -csp "DigiCert Signing Manager KSP" -key -user 
-          #smksp_cert_sync.exe 
+          curl -X GET  https://one.digicert.com/signingmanager/api-ui/v1/releases/smtools-windows-x64.msi/download -H "x-api-key:%SM_API_KEY%" -o smtools-windows-x64.msi 
+
         shell: cmd 
 
-      - name: Signing using Signtool 
-        run: | 
-          signtool.exe sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "D:\a\github-action-electron\github-action-electron\dist\my-electron-app Setup ${{ steps.variables.outputs.version }}.exe" 
-          signtool.exe verify /v /pa "D:\a\github-action-electron\github-action-electron\dist\my-electron-app Setup ${{ steps.variables.outputs.version }}.exe" 
+      # - name: Signing using Signtool 
+      #   run: | 
+      #     signtool.exe sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "D:\a\github-action-electron\github-action-electron\dist\my-electron-app Setup ${{ steps.variables.outputs.version }}.exe" 
+      #     signtool.exe verify /v /pa "D:\a\github-action-electron\github-action-electron\dist\my-electron-app Setup ${{ steps.variables.outputs.version }}.exe" 
 
-      - name: Signing using Nuget 
-        run: | 
-          copy D:\a\github-action-electron\github-action-electron\UNSIGNED.nupkg D:\a\github-action-electron\github-action-electron\dist\UNSIGNED.nupkg 
-          nuget sign "D:\a\github-action-electron\github-action-electron\dist\UNSIGNED.nupkg" -Timestamper http://timestamp.digicert.com -outputdirectory "D:\a\github-action-electron\github-action-electron\dist\Signed" -CertificateFingerprint ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} -HashAlgorithm SHA256 -Verbosity detailed -Overwrite 
-          nuget verify -All "D:\a\github-action-electron\github-action-electron\dist\Signed\*" 
+      # - name: Signing using Nuget 
+      #   run: | 
+      #     copy D:\a\github-action-electron\github-action-electron\UNSIGNED.nupkg D:\a\github-action-electron\github-action-electron\dist\UNSIGNED.nupkg 
+      #     nuget sign "D:\a\github-action-electron\github-action-electron\dist\UNSIGNED.nupkg" -Timestamper http://timestamp.digicert.com -outputdirectory "D:\a\github-action-electron\github-action-electron\dist\Signed" -CertificateFingerprint ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} -HashAlgorithm SHA256 -Verbosity detailed -Overwrite 
+      #     nuget verify -All "D:\a\github-action-electron\github-action-electron\dist\Signed\*" 
 
-      - name: Signing using Mage 
-        run: | 
-          copy D:\a\github-action-electron\github-action-electron\UNSIGNED2.manifest D:\a\github-action-electron\github-action-electron\dist\UNSIGNED2.manifest 
-          mage.exe -sign "D:\a\github-action-electron\github-action-electron\dist\UNSIGNED2.manifest" -CertHash ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} -a sha256RSA 
-          mage -Verify "D:\a\github-action-electron\github-action-electron\dist\UNSIGNED2.manifest" 
+      # - name: Signing using Mage 
+      #   run: | 
+      #     copy D:\a\github-action-electron\github-action-electron\UNSIGNED2.manifest D:\a\github-action-electron\github-action-electron\dist\UNSIGNED2.manifest 
+      #     mage.exe -sign "D:\a\github-action-electron\github-action-electron\dist\UNSIGNED2.manifest" -CertHash ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} -a sha256RSA 
+      #     mage -Verify "D:\a\github-action-electron\github-action-electron\dist\UNSIGNED2.manifest" 
 
-      - name: Upload artifacts 
-        uses: actions/upload-artifact@v2 
-        with: 
-          name: ${{ matrix.os }} 
-          path: | 
-            dist 
+      # - name: Upload artifacts 
+      #   uses: actions/upload-artifact@v2 
+      #   with: 
+      #     name: ${{ matrix.os }} 
+      #     path: | 
+      #       dist 
