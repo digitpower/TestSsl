@@ -55,11 +55,11 @@ jobs:
         run: | 
           curl -X GET  https://one.digicert.com/signingmanager/api-ui/v1/releases/smtools-windows-x64.msi/download -H "x-api-key:%SM_API_KEY%" -o smtools-windows-x64.msi 
           msiexec /i smtools-windows-x64.msi /quiet /qn 
-          cd C:\Program Files\DigiCert\DigiCert Keylocker Tools
-          .\smksp_registrar.exe list 
-          .\smctl.exe keypair ls 
+          cd C:\Program Files\DigiCert\DigiCert One Signing Manager Tools
+          smksp_registrar.exe list 
+          smctl.exe keypair ls 
           C:\Windows\System32\certutil.exe -csp "DigiCert Signing Manager KSP" -key -user 
-          .\smksp_cert_sync.exe 
+          smksp_cert_sync.exe 
         shell: cmd 
 
       # - name: Signing using Signtool 
